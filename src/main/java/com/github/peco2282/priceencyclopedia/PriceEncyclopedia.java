@@ -3,7 +3,6 @@ package com.github.peco2282.priceencyclopedia;
 import com.github.peco2282.priceencyclopedia.config.ConfigHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@SuppressWarnings("CommentedOutCode")
+@SuppressWarnings({"CommentedOutCode", "unused", "GrazieInspection"})
 @Mod(PriceEncyclopedia.MODID)
 public class PriceEncyclopedia {
 
@@ -64,6 +63,13 @@ public class PriceEncyclopedia {
     return LOGGER;
   }
 
+  public static boolean isPlayingMammamia() {
+    Minecraft mc = Minecraft.getInstance();
+    ServerData data = mc.getCurrentServer();
+    if (data == null) return false;
+    return data.ip.contains("play.manmamiya");
+  }
+
   private void commonSetup(final FMLCommonSetupEvent event) {
     if (FMLEnvironment.dist.isClient()) {
       file = ConfigHandler.getInstance();
@@ -103,12 +109,5 @@ public class PriceEncyclopedia {
       LOGGER.info("HELLO FROM CLIENT SETUP");
       LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
-  }
-
-  public static boolean isPlayingMammamia() {
-    Minecraft mc = Minecraft.getInstance();
-    ServerData data = mc.getCurrentServer();
-    if (data == null) return false;
-    return data.ip.contains("play.manmamiya");
   }
 }
