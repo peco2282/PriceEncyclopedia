@@ -35,6 +35,7 @@ public class TooltipEvent {
     for (PriceAbstract price : abstracts) {
       if (stack.getItem().toString().equals(price.getItemName())) {
         generateTooltip(toolTip, price);
+        break;
       }
     }
   }
