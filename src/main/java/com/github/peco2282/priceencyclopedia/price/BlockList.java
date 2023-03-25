@@ -170,7 +170,12 @@ public class BlockList {
       new PriceBlock("glass", 1, STD),
       new PriceBlock("bell", 24, D, ONE),
       new PriceBlock("pumpkin", 3, D, ST),
+      new PriceBlock("sculk_catalyst", 12, D, ONE),
+      new PriceBlock("sculk_sensor", 16, D, ST),
+
       new PriceBlock("jack_o_lantern", 5, D, ST),
       new PriceBlock("cake", 5, G, ONE),
+      new PriceBlock("melon", 3, D, ST),
+      new PriceBlock("sugar_cane", 5, D, ST)
   };
 }
