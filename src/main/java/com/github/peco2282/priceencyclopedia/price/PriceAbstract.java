@@ -3,7 +3,6 @@ package com.github.peco2282.priceencyclopedia.price;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -98,6 +97,7 @@ public class PriceAbstract {
     return switch (type) {
       case BLOCK -> "block";
       case ITEM -> "item";
+      case ENCHANTMENT -> "enchant";
       default -> null;
     };
   }
@@ -106,6 +106,7 @@ public class PriceAbstract {
     return switch (type) {
       case "block" -> ItemType.BLOCK;
       case "item" -> ItemType.ITEM;
+      case "enchant", "enchantment" -> ItemType.ENCHANTMENT;
       default -> ItemType.INVALID;
     };
   }
@@ -155,6 +156,7 @@ public class PriceAbstract {
   public enum ItemType {
     BLOCK,
     ITEM,
+    ENCHANTMENT,
     INVALID
   }
 

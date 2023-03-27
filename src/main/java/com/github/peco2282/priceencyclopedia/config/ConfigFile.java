@@ -105,14 +105,14 @@ public class ConfigFile {
 
   private ArrayList<Map<String, String>> getPriceJson() {
     ArrayList<Map<String, String>> arrayList = new ArrayList<>();
-    ArrayList<PriceAbstract> array = SetupMinecraftItemConfig.getAll();
+    ArrayList<? extends PriceAbstract> array = SetupMinecraftItemConfig.getAll();
     for (PriceAbstract price : array) {
       arrayList.add(price.toMap());
     }
     return arrayList;
   }
 
-  public ArrayList<PriceAbstract> getAbstracts() {
+  public ArrayList<? extends PriceAbstract> getAbstracts() {
     return abstracts;
   }
 }

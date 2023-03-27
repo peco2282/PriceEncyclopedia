@@ -12,6 +12,8 @@ public class SetupMinecraftItemConfig {
 
   static ArrayList<PriceBlock> blocks = new ArrayList<>();
 
+  static ArrayList<PriceEnchanted> enchanteds = new ArrayList<>();
+
   private static void setItems() {
     items.addAll(Arrays.asList(ItemList.items));
   }
@@ -20,19 +22,29 @@ public class SetupMinecraftItemConfig {
     blocks.addAll(Arrays.asList(BlockList.blocks));
   }
 
+  private static void setEnchanteds() {
+    enchanteds.addAll(Arrays.asList(EnchantedList.enchanteds));
+  }
+
+  public static ArrayList<? extends PriceAbstract> getAll() {
+    setBlocks();
+    setItems();
+    setEnchanteds();
+    abstracts.addAll(blocks);
+    abstracts.addAll(items);
+    abstracts.addAll(enchanteds);
+    return abstracts;
+  }
+
   public ArrayList<PriceItem> getItems() {
     return items;
   }
 
-  public  ArrayList<PriceBlock> getBlocks() {
+  public ArrayList<PriceBlock> getBlocks() {
     return blocks;
   }
 
-  public static ArrayList<PriceAbstract> getAll() {
-    setBlocks();
-    setItems();
-    abstracts.addAll(blocks);
-    abstracts.addAll(items);
-    return abstracts;
+  public ArrayList<PriceEnchanted> getEnchanteds() {
+    return enchanteds;
   }
 }
