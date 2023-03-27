@@ -23,6 +23,8 @@ public class ConfigFile {
   public JsonReader jsonReader = null;
   //  private Map<String, ArrayList<Map<String, PriceAbstract>>> items;
   private ArrayList<PriceAbstract> abstracts;
+  private boolean loaded;
+  private String reason = null;
 
   public ConfigFile(File confFile) {
     this.confFile = confFile;
@@ -31,15 +33,21 @@ public class ConfigFile {
       Gson gson = new Gson();
       map = gson.fromJson(reader, MAP_TYPE);
       this.jsonReader = reader;
+      loaded = true;
     } catch (FileNotFoundException ignored) {
       // First time starting.
       map = save();
+      loaded = true;
     } catch (JsonParseException exception) {
       System.err.println("Syntax error in config file " + confFile.getAbsolutePath() + " - using defaults");
       exception.printStackTrace(System.err);
+      loaded = false;
+      reason = "Syntax error in config file with JsonParseException";
     } catch (IOException exception) {
       System.err.println("Trying to load config file " + confFile.getAbsolutePath() + ":");
       exception.printStackTrace(System.err);
+      loaded = false;
+      reason = "Trying to load config file. but failed with IOException.";
     }
 
     try {
@@ -47,7 +55,17 @@ public class ConfigFile {
     } catch (Exception exception) {
       System.err.println("Error when upgrading config file " + confFile.getAbsolutePath() + " - hope for the best");
       System.err.println("If you experience crashes, delete the file!");
+      loaded = false;
+      reason = "Error when upgrading config file. If you experience crashes, delete the file!";
     }
+  }
+
+  public boolean isLoaded() {
+    return loaded;
+  }
+
+  public String getReason() {
+    return reason;
   }
 
   public static File getFile() {

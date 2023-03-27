@@ -2,6 +2,7 @@ package com.github.peco2282.priceencyclopedia.config;
 
 import java.io.File;
 
+@SuppressWarnings("unused")
 public class ConfigHandler {
   private static ConfigHandler instance;
   private static ConfigFile config;
@@ -36,5 +37,12 @@ public class ConfigHandler {
 
   public static ConfigFile getConfig() {
     return config;
+  }
+  public boolean isLoaded() {
+    return config.isLoaded();
+  }
+
+  public String getReason() {
+    return config.getReason();
   }
 }
