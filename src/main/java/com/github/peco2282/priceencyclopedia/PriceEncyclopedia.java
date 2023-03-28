@@ -65,7 +65,7 @@ public class PriceEncyclopedia {
     return LOGGER;
   }
 
-  public static boolean isPlayingMammamia() {
+  public static boolean isPlayingManmamia() {
     Minecraft mc = Minecraft.getInstance();
     ServerData data = mc.getCurrentServer();
     if (data == null) return false;
