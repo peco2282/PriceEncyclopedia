@@ -69,7 +69,7 @@ public class PriceEncyclopedia {
     Minecraft mc = Minecraft.getInstance();
     ServerData data = mc.getCurrentServer();
     if (data == null) return false;
-    return data.ip.contains("play.manmamiya");
+    return data.ip.contains("manmamiya");
   }
 
   private void commonSetup(final FMLCommonSetupEvent event) {
