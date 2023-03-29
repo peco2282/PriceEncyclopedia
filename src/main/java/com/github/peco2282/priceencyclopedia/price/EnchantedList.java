@@ -1,6 +1,6 @@
 package com.github.peco2282.priceencyclopedia.price;
 
-import static com.github.peco2282.priceencyclopedia.price.PriceAbstract.PaymentType.*;
+import static com.github.peco2282.priceencyclopedia.price.PriceComponent.PaymentType.*;
 
 public class EnchantedList {
   static final PriceEnchanted[] enchanteds = new PriceEnchanted[]{

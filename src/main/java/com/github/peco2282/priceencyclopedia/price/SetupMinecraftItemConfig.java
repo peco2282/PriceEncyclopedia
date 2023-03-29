@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public class SetupMinecraftItemConfig {
-  static ArrayList<PriceAbstract> abstracts = new ArrayList<>();
+  static ArrayList<PriceComponent> abstracts = new ArrayList<>();
 
   static ArrayList<PriceItem> items = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public class SetupMinecraftItemConfig {
     enchanteds.addAll(Arrays.asList(EnchantedList.enchanteds));
   }
 
-  public static ArrayList<? extends PriceAbstract> getAll() {
+  public static ArrayList<? extends PriceComponent> getAll() {
     setBlocks();
     setItems();
     setEnchanteds();

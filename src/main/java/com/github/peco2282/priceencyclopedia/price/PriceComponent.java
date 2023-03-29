@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-public class PriceAbstract {
+public class PriceComponent {
 
   private String itemName;
   private ItemType type;
@@ -14,7 +14,7 @@ public class PriceAbstract {
   private PaymentType paymentType;
   private ReceiptType receiptType;
 
-  public PriceAbstract(String itemName, ItemType type, int price, PaymentType paymentType, ReceiptType receiptType) {
+  public PriceComponent(String itemName, ItemType type, int price, PaymentType paymentType, ReceiptType receiptType) {
     this.itemName = itemName;
     this.type = type;
     this.price = price;
@@ -22,11 +22,11 @@ public class PriceAbstract {
     this.receiptType = receiptType;
   }
 
-  private PriceAbstract() {
+  private PriceComponent() {
   }
 
-  public static PriceAbstract parsePriceAbstract(Map<String, String> map) {
-    PriceAbstract pa = new PriceAbstract();
+  public static PriceComponent parsePriceAbstract(Map<String, String> map) {
+    PriceComponent pa = new PriceComponent();
     try {
       pa.setItemName(map.get("name"));
       pa.setType(pa.getItemTypeFromString(map.get("type")));

@@ -1,10 +1,10 @@
 package com.github.peco2282.priceencyclopedia;
 
 import com.github.peco2282.priceencyclopedia.config.ConfigHandler;
-import com.github.peco2282.priceencyclopedia.price.PriceAbstract;
-import com.github.peco2282.priceencyclopedia.price.PriceAbstract.ItemType;
-import com.github.peco2282.priceencyclopedia.price.PriceAbstract.PaymentType;
-import com.github.peco2282.priceencyclopedia.price.PriceAbstract.ReceiptType;
+import com.github.peco2282.priceencyclopedia.price.PriceComponent;
+import com.github.peco2282.priceencyclopedia.price.PriceComponent.ItemType;
+import com.github.peco2282.priceencyclopedia.price.PriceComponent.PaymentType;
+import com.github.peco2282.priceencyclopedia.price.PriceComponent.ReceiptType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -28,10 +28,10 @@ public class TooltipEvent {
     if (!PriceEncyclopedia.isPlayingManmamiya()) return;
     ItemStack stack = event.getItemStack();
     List<Component> toolTip = event.getToolTip();
-    ArrayList<? extends PriceAbstract> abstracts = ConfigHandler.getConfig().getAbstracts();
+    ArrayList<? extends PriceComponent> abstracts = ConfigHandler.getConfig().getAbstracts();
     if (stack.getItem() instanceof EnchantedBookItem) { // if enchantedbook.
       ListTag listTag = EnchantedBookItem.getEnchantments(stack);
-      for (PriceAbstract price : abstracts) {
+      for (PriceComponent price : abstracts) {
         String id, priceId;
         for (Tag tag : listTag) {
           if (tag instanceof CompoundTag compoundTag) {
@@ -52,7 +52,7 @@ public class TooltipEvent {
         }
       }
     } else {
-      for (PriceAbstract price : abstracts) {
+      for (PriceComponent price : abstracts) {
         if (stack.getItem().toString().equals(price.getItemName())) {
           generateTooltip(toolTip, price);
           break;
@@ -63,7 +63,7 @@ public class TooltipEvent {
 
 
   // [{id:"minecraft:efficiency",lvl:1s}] : {net.minecraft.world.item.enchantment.DiggingEnchantment@296c945d=1}
-  private void generateEnchantedTooltip(List<Component> toolTip, PriceAbstract price) {
+  private void generateEnchantedTooltip(List<Component> toolTip, PriceComponent price) {
     String s = switch (price.getType()) {
       case ENCHANTMENT -> buildEnchanted(price);
       case ITEM, BLOCK, INVALID -> null;
@@ -89,7 +89,7 @@ public class TooltipEvent {
     }
   }
 
-  void generateTooltip(List<Component> tooltip, PriceAbstract price) {
+  void generateTooltip(List<Component> tooltip, PriceComponent price) {
     tooltip.add(tComponent("", ChatFormatting.BLACK));
     tooltip.add(tComponent(
             price.getPrice() +
@@ -118,7 +118,7 @@ public class TooltipEvent {
   }
 
   @Nullable
-  String buildEnchanted(PriceAbstract price) {
+  String buildEnchanted(PriceComponent price) {
     if (price.getPaymentType() == PaymentType.D && price.getPrice() >= 9) {
       return String
           .format(
@@ -129,7 +129,7 @@ public class TooltipEvent {
   }
 
   @Nullable
-  String buildItem(@NotNull PriceAbstract price) {
+  String buildItem(@NotNull PriceComponent price) {
     String stack = null;
     if (
         price.getPaymentType() == PaymentType.STDB &&

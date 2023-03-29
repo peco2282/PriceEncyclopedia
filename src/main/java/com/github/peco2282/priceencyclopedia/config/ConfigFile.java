@@ -1,7 +1,7 @@
 package com.github.peco2282.priceencyclopedia.config;
 
 import com.github.peco2282.priceencyclopedia.PriceEncyclopedia;
-import com.github.peco2282.priceencyclopedia.price.PriceAbstract;
+import com.github.peco2282.priceencyclopedia.price.PriceComponent;
 import com.github.peco2282.priceencyclopedia.price.SetupMinecraftItemConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,7 +22,7 @@ public class ConfigFile {
   private final File confFile;
   public JsonReader jsonReader = null;
   //  private Map<String, ArrayList<Map<String, PriceAbstract>>> items;
-  private ArrayList<PriceAbstract> abstracts;
+  private ArrayList<PriceComponent> abstracts;
   private boolean loaded;
   private String reason = null;
 
@@ -82,16 +82,16 @@ public class ConfigFile {
     return new File(dir, PriceEncyclopedia.MODID + ".json");
   }
 
-  private static ArrayList<PriceAbstract> parsePriceJson(
+  private static ArrayList<PriceComponent> parsePriceJson(
       ArrayList<Map<String, String>> stringArray
   ) {
-    ArrayList<PriceAbstract> map = new ArrayList<>();
+    ArrayList<PriceComponent> map = new ArrayList<>();
     int i = 0;
     try {
       for (Map<String, String> entry : stringArray) {
         try {
           map.add(
-              PriceAbstract.parsePriceAbstract(entry)
+              PriceComponent.parsePriceAbstract(entry)
           );
         } catch (Exception exception) {
           PriceEncyclopedia.getLOGGER().warn("parse failed at " + i + "times.");
@@ -123,14 +123,14 @@ public class ConfigFile {
 
   private ArrayList<Map<String, String>> getPriceJson() {
     ArrayList<Map<String, String>> arrayList = new ArrayList<>();
-    ArrayList<? extends PriceAbstract> array = SetupMinecraftItemConfig.getAll();
-    for (PriceAbstract price : array) {
+    ArrayList<? extends PriceComponent> array = SetupMinecraftItemConfig.getAll();
+    for (PriceComponent price : array) {
       arrayList.add(price.toMap());
     }
     return arrayList;
   }
 
-  public ArrayList<? extends PriceAbstract> getAbstracts() {
+  public ArrayList<? extends PriceComponent> getAbstracts() {
     return abstracts;
   }
 }

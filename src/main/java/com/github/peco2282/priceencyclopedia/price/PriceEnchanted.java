@@ -1,6 +1,6 @@
 package com.github.peco2282.priceencyclopedia.price;
 
-public class PriceEnchanted extends PriceAbstract {
+public class PriceEnchanted extends PriceComponent {
   PriceEnchanted(
       String enchantmentName,
       int price,

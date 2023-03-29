@@ -1,7 +1,7 @@
 package com.github.peco2282.priceencyclopedia.price;
 
-import static com.github.peco2282.priceencyclopedia.price.PriceAbstract.PaymentType.*;
-import static com.github.peco2282.priceencyclopedia.price.PriceAbstract.ReceiptType.*;
+import static com.github.peco2282.priceencyclopedia.price.PriceComponent.PaymentType.*;
+import static com.github.peco2282.priceencyclopedia.price.PriceComponent.ReceiptType.*;
 
 public class ItemList {
   static final PriceItem[] items = new PriceItem[]{

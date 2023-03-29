@@ -1,6 +1,6 @@
 package com.github.peco2282.priceencyclopedia.price;
 
-public class PriceBlock extends PriceAbstract {
+public class PriceBlock extends PriceComponent {
   PriceBlock(String itemName, int price, PaymentType paymentType, ReceiptType receiptType) {
     super(itemName, ItemType.BLOCK, price, paymentType, receiptType);
   }
