@@ -19,8 +19,8 @@
 
 package com.github.peco2282.priceencyclopedia.price;
 
-import static com.github.peco2282.priceencyclopedia.price.PriceComponent.PaymentType.*;
-import static com.github.peco2282.priceencyclopedia.price.PriceComponent.ReceiptType.*;
+import static com.github.peco2282.priceencyclopedia.price.IPrice.PaymentType.*;
+import static com.github.peco2282.priceencyclopedia.price.IPrice.ReceiptType.*;
 
 public class BlockList {
   static final PriceBlock[] blocks = new PriceBlock[]{

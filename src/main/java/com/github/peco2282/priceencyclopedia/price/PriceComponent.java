@@ -20,179 +20,162 @@
 package com.github.peco2282.priceencyclopedia.price;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-public class PriceComponent {
+public class PriceComponent implements IPrice {
 
-  private String itemName;
-  private ItemType type;
-  private int price;
-  private PaymentType paymentType;
-  private ReceiptType receiptType;
+	private String itemName;
+	private ItemType type;
+	private int price;
+	private PaymentType paymentType;
+	private ReceiptType receiptType;
 
-  public PriceComponent(String itemName, ItemType type, int price, PaymentType paymentType, ReceiptType receiptType) {
-    this.itemName = itemName;
-    this.type = type;
-    this.price = price;
-    this.paymentType = paymentType;
-    this.receiptType = receiptType;
-  }
+	public PriceComponent(String itemName, ItemType type, int price, PaymentType paymentType, ReceiptType receiptType) {
+		this.itemName = itemName;
+		this.type = type;
+		this.price = price;
+		this.paymentType = paymentType;
+		this.receiptType = receiptType;
+	}
 
-  private PriceComponent() {
-  }
+	private PriceComponent() {
+	}
 
-  public static PriceComponent parsePriceAbstract(Map<String, String> map) {
-    PriceComponent pa = new PriceComponent();
-    try {
-      pa.setItemName(map.get("name"));
-      pa.setType(pa.getItemTypeFromString(map.get("type")));
-      pa.setPrice(Integer.parseInt(map.get("price")));
-      pa.setPaymentType(pa.getPaymentTypeFromString(map.get("payment")));
-      pa.setReceiptType(pa.getReceiptTypeFromString(map.get("receipt")));
-    } catch (Exception igore) {
-      pa.setItemName("");
-      pa.setType(ItemType.INVALID);
-      pa.setPrice(0);
-      pa.setPaymentType(PaymentType.INVALID);
-      pa.setReceiptType(ReceiptType.INVALID);
-    }
-    return pa;
-  }
+	public static @NotNull PriceComponent parsePriceAbstract(Map<String, String> map) {
+		PriceComponent pa = new PriceComponent();
+		try {
+			pa.setItemName(map.get("name"));
+			pa.setType(pa.getItemTypeFromString(map.get("type")));
+			pa.setPrice(Integer.parseInt(map.get("price")));
+			pa.setPaymentType(pa.getPaymentTypeFromString(map.get("payment")));
+			pa.setReceiptType(pa.getReceiptTypeFromString(map.get("receipt")));
+		} catch (Exception igore) {
+			pa.setItemName("");
+			pa.setType(ItemType.INVALID);
+			pa.setPrice(0);
+			pa.setPaymentType(PaymentType.INVALID);
+			pa.setReceiptType(ReceiptType.INVALID);
+		}
+		return pa;
+	}
 
-  public @NotNull Map<String, String> toMap() {
-    Map<String, String> map = new HashMap<>();
-    map.put("name", this.itemName);
-    map.put("type", this.getItemTypeToString());
-    map.put("price", String.valueOf(this.price));
-    map.put("payment", this.getPaymentTypeToString());
-    map.put("receipt", this.getReceiptTypeToString());
-    return map;
-  }
+	public @NotNull Map<String, String> toMap() {
+		Map<String, String> map = new HashMap<>();
+		map.put("name", this.itemName);
+		map.put("type", this.getItemTypeToString());
+		map.put("price", String.valueOf(this.price));
+		map.put("payment", this.getPaymentTypeToString());
+		map.put("receipt", this.getReceiptTypeToString());
+		return map;
+	}
 
-  public String getItemName() {
-    return itemName;
-  }
+	@NotNull
+	public String getItemName() {
+		return itemName;
+	}
 
-  private void setItemName(String itemName) {
-    this.itemName = itemName;
-  }
 
-  public ItemType getType() {
-    return type;
-  }
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
 
-  private void setType(ItemType type) {
-    this.type = type;
-  }
+	@NotNull
+	public IPrice.ItemType getType() {
+		return type;
+	}
 
-  public int getPrice() {
-    return price;
-  }
+	private void setType(ItemType type) {
+		this.type = type;
+	}
 
-  private void setPrice(int price) {
-    this.price = price;
-  }
+	public int getPrice() {
+		return price;
+	}
 
-  public PaymentType getPaymentType() {
-    return paymentType;
-  }
+	public void setPrice(int price) {
+		this.price = price;
+	}
 
-  private void setPaymentType(PaymentType paymentType) {
-    this.paymentType = paymentType;
-  }
+	@NotNull
+	public PaymentType getPaymentType() {
+		return paymentType;
+	}
 
-  public ReceiptType getReceiptType() {
-    return receiptType;
-  }
+	private void setPaymentType(PaymentType paymentType) {
+		this.paymentType = paymentType;
+	}
 
-  private void setReceiptType(ReceiptType receiptType) {
-    this.receiptType = receiptType;
-  }
+	@NotNull
+	public ReceiptType getReceiptType() {
+		return receiptType;
+	}
 
-  public String getItemTypeToString() {
-    return switch (type) {
-      case BLOCK -> "block";
-      case ITEM -> "item";
-      case ENCHANTMENT -> "enchant";
-      default -> null;
-    };
-  }
+	private void setReceiptType(ReceiptType receiptType) {
+		this.receiptType = receiptType;
+	}
 
-  public ItemType getItemTypeFromString(String type) {
-    return switch (type) {
-      case "block" -> ItemType.BLOCK;
-      case "item" -> ItemType.ITEM;
-      case "enchant", "enchantment" -> ItemType.ENCHANTMENT;
-      default -> ItemType.INVALID;
-    };
-  }
+	@Nullable
+	public String getItemTypeToString() {
+		return switch (type) {
+			case BLOCK -> "block";
+			case ITEM -> "item";
+			case ENCHANTMENT -> "enchant";
+			default -> null;
+		};
+	}
 
-  public String getPaymentTypeToString() {
-    return switch (paymentType) {
-      case G -> "g";
-      case D -> "d";
-      case DB -> "db";
-      case STD -> "std";
-      case STDB -> "stdb";
-      case INVALID -> null;
-    };
-  }
+	public ItemType getItemTypeFromString(@NotNull String type) {
+		return switch (type) {
+			case "block" -> ItemType.BLOCK;
+			case "item" -> ItemType.ITEM;
+			case "enchant", "enchantment" -> ItemType.ENCHANTMENT;
+			default -> ItemType.INVALID;
+		};
+	}
 
-  public PaymentType getPaymentTypeFromString(String type) {
-    return switch (type) {
-      case "g" -> PaymentType.G;
-      case "d" -> PaymentType.D;
-      case "db" -> PaymentType.DB;
-      case "std" -> PaymentType.STD;
-      case "stdb" -> PaymentType.STDB;
-      default -> PaymentType.INVALID;
-    };
-  }
+	public String getPaymentTypeToString() {
+		return switch (paymentType) {
+			case G -> "g";
+			case D -> "d";
+			case DB -> "db";
+			case STD -> "std";
+			case STDB -> "stdb";
+			case INVALID -> null;
+		};
+	}
 
-  public String getReceiptTypeToString() {
-    return switch (receiptType) {
-      case ONE -> "one"; // fixme confファイルに追加のこと
-      case ST -> "st";
-      case C -> "c";
-      case LC -> "lc";
-      case INVALID -> null;
-    };
-  }
+	public PaymentType getPaymentTypeFromString(@NotNull String type) {
+		return switch (type) {
+			case "g" -> PaymentType.G;
+			case "d" -> PaymentType.D;
+			case "db" -> PaymentType.DB;
+			case "std" -> PaymentType.STD;
+			case "stdb" -> PaymentType.STDB;
+			default -> PaymentType.INVALID;
+		};
+	}
 
-  public ReceiptType getReceiptTypeFromString(String type) {
-    return switch (type.toLowerCase()) {
-      case "one" -> ReceiptType.ONE;
-      case "st" -> ReceiptType.ST;
-      case "c" -> ReceiptType.C;
-      case "lc" -> ReceiptType.LC;
-      default -> ReceiptType.INVALID;
-    };
-  }
+	public String getReceiptTypeToString() {
+		return switch (receiptType) {
+			case ONE -> "one"; // fixme confファイルに追加のこと
+			case ST -> "st";
+			case C -> "c";
+			case LC -> "lc";
+			case INVALID -> null;
+		};
+	}
 
-  public enum ItemType {
-    BLOCK,
-    ITEM,
-    ENCHANTMENT,
-    INVALID
-  }
-
-  public enum PaymentType {
-    G,
-    D,
-    DB,
-    STD,
-    STDB,
-    INVALID
-  }
-
-  public enum ReceiptType {
-    ONE,
-    ST,
-    C,
-    LC,
-    INVALID
-  }
+	public ReceiptType getReceiptTypeFromString(@NotNull String type) {
+		return switch (type.toLowerCase()) {
+			case "one" -> ReceiptType.ONE;
+			case "st" -> ReceiptType.ST;
+			case "c" -> ReceiptType.C;
+			case "lc" -> ReceiptType.LC;
+			default -> ReceiptType.INVALID;
+		};
+	}
 }
