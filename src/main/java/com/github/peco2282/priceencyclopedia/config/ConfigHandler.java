@@ -23,45 +23,44 @@ import java.io.File;
 
 @SuppressWarnings("unused")
 public class ConfigHandler {
-  private static ConfigHandler instance;
-  private static ConfigFile config;
-  private String fileName;
+	private static ConfigHandler instance;
+	private static ConfigFile config;
+	private String fileName;
 
-  public static ConfigHandler getInstance() {
-    if (instance == null) instance = new ConfigHandler();
-    return instance;
-  }
+	public static ConfigHandler getInstance() {
+		if (instance == null) instance = new ConfigHandler();
+		return instance;
+	}
 
-  public void load() {
-    this.load(ConfigFile.getFile());
-  }
+	public static ConfigFile getConfig() {
+		return config;
+	}
 
-  public void load(final File confFile) {
-    if (config == null) {
-      config = new ConfigFile(confFile);
-      fileName = confFile.getPath();
-      loadConfig();
-    }
-  }
+	public void load() {
+		this.load(ConfigFile.getFile());
+	}
 
-  private void loadConfig() {
-    if (config != null) config.save();
-  }
+	public void load(final File confFile) {
+		if (config == null) {
+			config = new ConfigFile(confFile);
+			fileName = confFile.getPath();
+			loadConfig();
+		}
+	}
 
+	private void loadConfig() {
+		if (config != null) config.save();
+	}
 
+	public String getFileName() {
+		return fileName;
+	}
 
-  public String getFileName() {
-    return fileName;
-  }
+	public boolean isLoaded() {
+		return config.isLoaded();
+	}
 
-  public static ConfigFile getConfig() {
-    return config;
-  }
-  public boolean isLoaded() {
-    return config.isLoaded();
-  }
-
-  public String getReason() {
-    return config.getReason();
-  }
+	public String getReason() {
+		return config.getReason();
+	}
 }

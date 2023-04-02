@@ -30,7 +30,6 @@ public interface IPrice {
 	Map<String, String> toMap();
 
 	@NotNull
-
 	String getItemName();
 
 	void setItemName(String itemName);

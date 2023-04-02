@@ -20,7 +20,9 @@
 package com.github.peco2282.priceencyclopedia;
 
 import com.github.peco2282.priceencyclopedia.config.ConfigHandler;
-import com.github.peco2282.priceencyclopedia.price.IPrice.*;
+import com.github.peco2282.priceencyclopedia.price.IPrice.ItemType;
+import com.github.peco2282.priceencyclopedia.price.IPrice.PaymentType;
+import com.github.peco2282.priceencyclopedia.price.IPrice.ReceiptType;
 import com.github.peco2282.priceencyclopedia.price.PriceComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
