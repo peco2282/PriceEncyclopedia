@@ -44,7 +44,8 @@ public class TooltipEvent {
 	@SubscribeEvent
 	public void onItemTooltipEvent(ItemTooltipEvent event) {
 		if (!Screen.hasControlDown()) return;
-		if (!PriceEncyclopedia.isPlayingManmamiya()) return;
+//		if (!PriceEncyclopedia.isPlayingManmamiya()) return;
+		if (!PriceEncyclopedia.isEnable()) return;
 		ItemStack stack = event.getItemStack();
 		List<Component> toolTip = event.getToolTip();
 		ArrayList<? extends PriceComponent> abstracts = ConfigHandler.getConfig().getAbstracts();

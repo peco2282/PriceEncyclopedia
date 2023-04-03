@@ -20,6 +20,8 @@
 package com.github.peco2282.priceencyclopedia;
 
 import com.github.peco2282.priceencyclopedia.config.ConfigHandler;
+import com.github.peco2282.priceencyclopedia.key.KeyHandler;
+import com.github.peco2282.priceencyclopedia.key.KeyInputEvent;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
@@ -51,6 +53,7 @@ public class PriceEncyclopedia {
 	// public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 	// Directly reference a slf4j logger
 	private static final Logger LOGGER = LogUtils.getLogger();
+	private static boolean isEnable;
 	public ConfigHandler file;
 	// Create a Deferred Register to hold Items which will all be registered under the "PriceEncyclopedia" namespace
 
@@ -67,6 +70,8 @@ public class PriceEncyclopedia {
 
 		// Register the commonSetup method for modloading
 		modEventBus.addListener(this::commonSetup);
+		KeyHandler.init();
+
     /*
      // Register the Deferred Register to the mod event bus so blocks get registered
      BLOCKS.register(modEventBus);
@@ -75,9 +80,11 @@ public class PriceEncyclopedia {
      */
 		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new KeyInputEvent());
 
 		// Register the item to a creative tab
 		// modEventBus.addListener(this::addCreative);
+		isEnable = true;
 	}
 
 	public static Logger getLOGGER() {
@@ -89,6 +96,18 @@ public class PriceEncyclopedia {
 		ServerData data = mc.getCurrentServer();
 		if (data == null) return false;
 		return data.ip.contains("manmamiya");
+	}
+
+	public static boolean isEnable() {
+		return isEnable;
+	}
+
+	public static void changeState() {
+		isEnable = !isEnable;
+	}
+
+	public static void setState(boolean state) {
+		isEnable = state;
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent event) {
@@ -107,11 +126,11 @@ public class PriceEncyclopedia {
 	}
 
 	/*
-		private void addCreative(CreativeModeTabEvent.BuildContents event) {
-			if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS)
-				event.accept(EXAMPLE_BLOCK_ITEM);
-		}
-	*/
+			private void addCreative(CreativeModeTabEvent.BuildContents event) {
+				if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS)
+					event.accept(EXAMPLE_BLOCK_ITEM);
+			}
+		*/
 	// You can use SubscribeEvent and let the Event Bus discover methods to call
 	@SubscribeEvent
 	public void onServerStarting(ServerStartingEvent event) {

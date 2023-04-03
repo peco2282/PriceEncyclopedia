@@ -1,6 +1,4 @@
 {
-  "priceencyclopedia.guioptions.true": "true",
-  "priceencyclopedia.guioptions.false": "false",
-  "priceencyclopedia.key.keyhandle": "Show&init",
-  "priceencyclopedia.key.keyhandle.description": "Show&init&description"
+  "key.priceencyclopedia.change": "価格の表示/非表示",
+	"key.categories.priceencyclopedia": "価格ビューアー"
 }
