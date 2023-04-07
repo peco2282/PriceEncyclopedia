@@ -58,14 +58,8 @@ public class TooltipEvent {
 				for (Tag tag : listTag) {
 					if (tag instanceof CompoundTag compoundTag) {
 						id = String.valueOf(compoundTag.get("id"));
-						priceId = "\"" + (
-							price
-								.getItemName()
-								.startsWith("minecraft:") ?
-								price
-									.getItemName() :
-								"minecraft:" + price.getItemName()
-						) + "\"";
+						String itemName = price.getItemName();
+						priceId = "\"" + (itemName.startsWith("minecraft:") ? itemName : "minecraft:" + itemName) + "\"";
 						if (priceId.equals(id)) {
 							generateEnchantedTooltip(toolTip, price);
 							break;
@@ -112,7 +106,7 @@ public class TooltipEvent {
 	}
 
 	void generateTooltip(@NotNull List<Component> tooltip, @NotNull PriceComponent price) {
-		tooltip.add(tComponent("", ChatFormatting.BLACK));
+		tooltip.add(tComponent(""));
 		tooltip.add(tComponent(
 				price.getPrice() +
 					price
