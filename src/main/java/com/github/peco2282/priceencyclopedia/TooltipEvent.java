@@ -37,6 +37,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +85,7 @@ public class TooltipEvent {
 
 
 	// [{id:"minecraft:efficiency",lvl:1s}] : {net.minecraft.world.item.enchantment.DiggingEnchantment@296c945d=1}
-	private void generateEnchantedTooltip(List<Component> toolTip, PriceComponent price) {
+	private void generateEnchantedTooltip(List<Component> toolTip, @NotNull PriceComponent price) {
 		String s = switch (price.getType()) {
 			case ENCHANTMENT -> buildEnchanted(price);
 			case ITEM, BLOCK, INVALID -> null;
@@ -109,7 +111,7 @@ public class TooltipEvent {
 		}
 	}
 
-	void generateTooltip(List<Component> tooltip, PriceComponent price) {
+	void generateTooltip(@NotNull List<Component> tooltip, @NotNull PriceComponent price) {
 		tooltip.add(tComponent("", ChatFormatting.BLACK));
 		tooltip.add(tComponent(
 				price.getPrice() +
@@ -138,11 +140,11 @@ public class TooltipEvent {
 	}
 
 	@Nullable
-	String buildEnchanted(PriceComponent price) {
+	String buildEnchanted(@NotNull PriceComponent price) {
 		if (price.getPaymentType() == PaymentType.D && price.getPrice() >= 9) {
 			return String
 				.format(
-					"%.2f DB / 個", (float) (price.getPrice() / 9)
+					"%.2f DB / 冊", new BigDecimal(price.getPrice()).divide(new BigDecimal(9), RoundingMode.HALF_UP)
 				);
 		}
 		return null;
@@ -151,54 +153,40 @@ public class TooltipEvent {
 	@Nullable
 	String buildItem(@NotNull PriceComponent price) {
 		String stack = null;
-		if (
-			price.getPaymentType() == PaymentType.STDB &&
-				price.getReceiptType() == ReceiptType.LC
-		) {
+		PaymentType paymentType = price.getPaymentType();
+		ReceiptType receiptType = price.getReceiptType();
+		BigDecimal priceDecimal = new BigDecimal(price.getPrice());
+
+		if (paymentType == PaymentType.STDB && receiptType == ReceiptType.LC) {
+			BigDecimal diamonds = priceDecimal.multiply(new BigDecimal(64 * 9));
 			stack = String.format(
-				" ( %.3f D /st )", (float) (64 * 9 * price.getPrice() / 54)
+				" ( %.2f D /st )", diamonds.divide(new BigDecimal(54), RoundingMode.HALF_UP).floatValue()
 			);
-		} else if (
-			price.getPaymentType() == PaymentType.STDB &&
-				price.getReceiptType() == ReceiptType.ST
-		) {
+		} else if (paymentType == PaymentType.STDB && receiptType == ReceiptType.ST) {
+			BigDecimal diamonds = priceDecimal.multiply(new BigDecimal(64 * 9));
 			stack = String.format(
-				" ( %.3f D /個 )", (float) (64 * 9 * price.getPrice() / 64)
+				" ( %.2f D /個 )", diamonds.divide(new BigDecimal(64), RoundingMode.HALF_UP).floatValue()
 			);
-		} else if (
-			price.getPaymentType() == PaymentType.DB &&
-				price.getReceiptType() == ReceiptType.ST
-		) {
+		} else if (paymentType == PaymentType.DB && receiptType == ReceiptType.ST) {
+			BigDecimal diamonds = priceDecimal.multiply(new BigDecimal(9));
 			stack = String.format(
-				" ( %.3f D /個 )", (float) (9 * price.getPrice() / 64)
+				" ( %.2f D /個 )", diamonds.divide(new BigDecimal(64), RoundingMode.HALF_UP).floatValue()
 			);
-		} else if (
-			price.getPaymentType() == PaymentType.STD &&
-				price.getReceiptType() == ReceiptType.ST
-		) {
+		} else if (paymentType == PaymentType.STD && receiptType == ReceiptType.ST) {
 			stack = String.format(
-				" ( %.3f D /個 )", (float) (price.getPrice() / 64)
+				" ( %.2f D /個 )", (float) price.getPrice()
 			);
-		} else if (
-			price.getPaymentType() == PaymentType.STD &&
-				price.getReceiptType() == ReceiptType.ONE
-		) {
+		} else if (paymentType == PaymentType.STD && receiptType == ReceiptType.ONE) {
 			stack = String.format(
-				" ( %.3f DB / 個 )", (float) (64 * price.getPrice() / 9)
+				" ( %.2f D /個 )", priceDecimal.multiply(new BigDecimal(64))
 			);
-		} else if (
-			price.getPaymentType() == PaymentType.D &&
-				price.getReceiptType() == ReceiptType.LC
-		) {
+		} else if (paymentType == PaymentType.D && receiptType == ReceiptType.LC) {
 			stack = String.format(
-				" ( %.3f D /st )", (float) (price.getPrice() / 54)
+				" ( %.2f D /st )", priceDecimal.divide(new BigDecimal(54), RoundingMode.HALF_UP)
 			);
-		} else if (
-			price.getPaymentType() == PaymentType.D &&
-				price.getReceiptType() == ReceiptType.ST
-		) {
+		} else if (paymentType == PaymentType.D && receiptType == ReceiptType.ST) {
 			stack = String.format(
-				" ( %.3f D /個 )", (float) (price.getPrice() / 64)
+				" ( %.2f D /個 )", priceDecimal.divide(new BigDecimal(64), RoundingMode.HALF_UP)
 			);
 		}
 		return stack;
