@@ -17,12 +17,8 @@ public class KeyInputEvent {
 
 	@SubscribeEvent
 	public void onKeyPressed(final InputEvent.Key key) {
-		if (KeyHandler.getKeyMapping().consumeClick()) {
-			if (key.getModifiers() == 0) {
-				PriceEncyclopedia.getLOGGER().info("modifires");
-				PriceEncyclopedia.changeState();
-				StateScreen.renderScreen(stack);
-			}
+		if (key.getAction() == 1 && KeyHandler.getKeyMapping() != null && key.getKey() == KeyHandler.getKeyMapping().getKey().getValue()) {
+			PriceEncyclopedia.changeState();
 		}
 	}
 
