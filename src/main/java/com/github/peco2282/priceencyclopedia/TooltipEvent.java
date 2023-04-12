@@ -39,18 +39,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TooltipEvent {
 	@SubscribeEvent
 	public void onItemTooltipEvent(ItemTooltipEvent event) {
 		if (!Screen.hasControlDown()) return;
-//		if (!PriceEncyclopedia.isPlayingManmamiya()) return;
+		if (!PriceEncyclopedia.isPlayingManmamiya()) return;
 		if (!PriceEncyclopedia.isEnable()) return;
 		ItemStack stack = event.getItemStack();
 		List<Component> toolTip = event.getToolTip();
-		ArrayList<? extends PriceComponent> abstracts = ConfigHandler.getConfig().getAbstracts();
+		List<? extends PriceComponent> abstracts = ConfigHandler.getConfig().getAbstracts();
 		if (stack.getItem() instanceof EnchantedBookItem) { // if enchantedbook.
 			ListTag listTag = EnchantedBookItem.getEnchantments(stack);
 			for (PriceComponent price : abstracts) {
