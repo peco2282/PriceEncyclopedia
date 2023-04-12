@@ -24,6 +24,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 @SuppressWarnings("NoTranslation")
@@ -36,7 +37,7 @@ public class KeyHandler {
 	}
 
 	@SubscribeEvent
-	public void onRegisterKeyMappingsEvent(RegisterKeyMappingsEvent event) {
+	public void onRegisterKeyMappingsEvent(@NotNull RegisterKeyMappingsEvent event) {
 		keyMapping = new KeyMapping("key.priceencyclopedia.change", GLFW.GLFW_KEY_O, "key.categories.misc");
 		event.register(keyMapping);
 	}

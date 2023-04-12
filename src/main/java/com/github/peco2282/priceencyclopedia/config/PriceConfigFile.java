@@ -27,6 +27,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -35,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
-public class PriceConfigFile {
+public class PriceConfigFile implements IConfig {
 	private static final Type MAP_TYPE = new TypeToken<ArrayList<Map<String, Object>>>() {
 	}.getType();
 	private static final String DIR_PATH = "config/" + PriceEncyclopedia.MODID;
@@ -62,11 +64,13 @@ public class PriceConfigFile {
 		}
 	}
 
-	public static File getOldFile() {
+	@Contract(" -> new")
+	public static @NotNull File getOldFile() {
 		return new File(new File("config"), PriceEncyclopedia.MODID + ".json");
 	}
 
-	public static File getFile() {
+	@Contract(" -> new")
+	public static @NotNull File getFile() {
 		PriceEncyclopedia.getLOGGER().warn("getFile() start.");
 		File dir = new File(DIR_PATH);
 		if (!(dir.exists())) {
@@ -80,7 +84,7 @@ public class PriceConfigFile {
 		return new File(dir, PriceEncyclopedia.MODID + ".json");
 	}
 
-	private static ArrayList<? extends PriceComponent> parsePriceJson(
+	private static @NotNull ArrayList<? extends PriceComponent> parsePriceJson(
 		ArrayList<Map<String, String>> stringArray
 	) {
 		ArrayList<PriceComponent> map = new ArrayList<>();
@@ -129,10 +133,12 @@ public class PriceConfigFile {
 		return map;
 	}
 
+	@Override
 	public boolean isLoaded() {
 		return loaded;
 	}
 
+	@Override
 	public String getReason() {
 		return reason;
 	}

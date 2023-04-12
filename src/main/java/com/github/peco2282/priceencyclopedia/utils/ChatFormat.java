@@ -24,6 +24,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
@@ -42,15 +43,17 @@ public class ChatFormat {
 		return withColor(Component.literal(message), formatting);
 	}
 
-	public static @NotNull MutableComponent withColor(MutableComponent component, ChatFormatting... formattings) {
+	public static @NotNull MutableComponent withColor(@NotNull MutableComponent component, ChatFormatting... formattings) {
 		return component.withStyle(formattings);
 	}
 
-	public static MutableComponent toComponent(String message) {
+	@Contract(value = "_ -> new", pure = true)
+	public static @NotNull MutableComponent toComponent(String message) {
 		return Component.literal(message);
 	}
 
-	public static MutableComponent buildComponent(MutableComponent message, MutableComponent... components) {
+	@Contract("_, _ -> param1")
+	public static MutableComponent buildComponent(MutableComponent message, MutableComponent @NotNull ... components) {
 		for (MutableComponent component: components) {
 			message.append(component);
 		}

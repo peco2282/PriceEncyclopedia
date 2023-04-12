@@ -22,10 +22,11 @@ package com.github.peco2282.priceencyclopedia.key;
 import com.github.peco2282.priceencyclopedia.PriceEncyclopedia;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class KeyInputEvent {
 	@SubscribeEvent
-	public void onKeyPressed(final InputEvent.Key key) {
+	public void onKeyPressed(final InputEvent.@NotNull Key key) {
 		if (key.getAction() == 1 && KeyHandler.getKeyMapping() != null && key.getKey() == KeyHandler.getKeyMapping().getKey().getValue()) {
 			PriceEncyclopedia.changeState();
 		}

@@ -42,6 +42,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 
 import static com.github.peco2282.priceencyclopedia.utils.ChatFormat.*;
@@ -93,6 +94,7 @@ public class PriceEncyclopedia {
 		isEnable = true;
 	}
 
+	@Contract(pure = true)
 	public static Logger getLOGGER() {
 		return LOGGER;
 	}
@@ -104,6 +106,7 @@ public class PriceEncyclopedia {
 		return data.ip.contains("manmamiya");
 	}
 
+	@Contract(pure = true)
 	public static boolean isEnable() {
 		return isEnable;
 	}
@@ -137,6 +140,7 @@ public class PriceEncyclopedia {
 			file = ConfigHandler.getInstance();
 			LOGGER.warn("get file instance.");
 			file.load();
+			file.loadSetting();
 
 			MinecraftForge.EVENT_BUS.register(this);
 			MinecraftForge.EVENT_BUS.register(file);
