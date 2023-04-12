@@ -19,12 +19,16 @@
 
 package com.github.peco2282.priceencyclopedia.config;
 
+import com.github.peco2282.priceencyclopedia.PriceEncyclopedia;
+import com.github.peco2282.priceencyclopedia.price.PriceComponent;
+
 import java.io.File;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class ConfigHandler {
 	private static ConfigHandler instance;
-	private static ConfigFile config;
+	private static PriceConfigFile config;
 	private String fileName;
 
 	public static ConfigHandler getInstance() {
@@ -32,17 +36,29 @@ public class ConfigHandler {
 		return instance;
 	}
 
-	public static ConfigFile getConfig() {
+	public static PriceConfigFile getConfig() {
 		return config;
 	}
 
 	public void load() {
-		this.load(ConfigFile.getFile());
+		this.load(PriceConfigFile.getFile());
 	}
 
 	public void load(final File confFile) {
 		if (config == null) {
-			config = new ConfigFile(confFile);
+			File old = PriceConfigFile.getOldFile();
+			if (!old.exists()) {
+				config = new PriceConfigFile(confFile);
+			} else {
+				PriceConfigFile cache = new PriceConfigFile(old);
+				List<? extends PriceComponent> components = cache.getAbstracts();
+				PriceEncyclopedia.getLOGGER().info(String.valueOf(components.size()));
+				config = new PriceConfigFile(confFile).setAbstractWithWriting(components);
+				boolean result = old.delete();
+				String s = "config/" + PriceEncyclopedia.MODID + ".json file delete " + (result ? "succeed!": "failed.");
+				PriceEncyclopedia.getLOGGER().info(s);
+				PriceEncyclopedia.setOld(true);
+			}
 			fileName = confFile.getPath();
 			loadConfig();
 		}

@@ -22,10 +22,13 @@ package com.github.peco2282.priceencyclopedia;
 import com.github.peco2282.priceencyclopedia.config.ConfigHandler;
 import com.github.peco2282.priceencyclopedia.key.KeyHandler;
 import com.github.peco2282.priceencyclopedia.key.KeyInputEvent;
+import com.github.peco2282.priceencyclopedia.utils.ChatFormat;
 import com.mojang.logging.LogUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,6 +44,8 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 
+import static com.github.peco2282.priceencyclopedia.utils.ChatFormat.*;
+
 // The value here should match an entry in the META-INF/mods.toml file
 @SuppressWarnings({"CommentedOutCode", "unused", "GrazieInspection"})
 @Mod(PriceEncyclopedia.MODID)
@@ -54,6 +59,7 @@ public class PriceEncyclopedia {
 	// Directly reference a slf4j logger
 	private static final Logger LOGGER = LogUtils.getLogger();
 	private static boolean isEnable;
+	private static boolean isOld = false;
 	public ConfigHandler file;
 	// Create a Deferred Register to hold Items which will all be registered under the "PriceEncyclopedia" namespace
 
@@ -110,6 +116,22 @@ public class PriceEncyclopedia {
 		isEnable = state;
 	}
 
+	public static void setOld(boolean old) {
+		isOld = old;
+	}
+
+	public static void announceChat(String message, Player player, ChatFormatting... component) {
+		if (player != null) {
+			announceChat(ChatFormat.withColor(message, component), player);
+		}
+	}
+
+	public static void announceChat(MutableComponent component, Player player) {
+		if (player != null) {
+			player.displayClientMessage(component, false);
+		}
+	}
+
 	private void commonSetup(final FMLCommonSetupEvent event) {
 		if (FMLEnvironment.dist.isClient()) {
 			file = ConfigHandler.getInstance();
@@ -140,14 +162,22 @@ public class PriceEncyclopedia {
 
 	@SubscribeEvent
 	public void onPlayerLoggined(PlayerEvent.PlayerLoggedInEvent event) {
-		event.getEntity().level.disconnect();
-		if (!file.isLoaded() && file.getReason() != null) {
-			event
-				.getEntity()
-				.sendSystemMessage(
-					Component.literal(file.getReason())
-				);
+		LOGGER.info(String.valueOf(isOld));
+		if (isOld) {
+			announceChat(
+				buildComponent(
+					toComponent(MODNAME + " mod is starting with 1.3.0, config files are "),
+					withColor("managed in directories.", ChatFormatting.BLUE, ChatFormatting.BOLD)
+				),
+				event.getEntity()
+			);
+			announceChat(
+				toComponent("The existing config files have been deleted and"),
+				event.getEntity()
+			);
+			announceChat("moved to the new directory with their contents retained.", event.getEntity());
 		}
+		if (!file.isLoaded() && file.getReason() != null) announceChat(file.getReason(), event.getEntity());
 	}
 
 	// You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

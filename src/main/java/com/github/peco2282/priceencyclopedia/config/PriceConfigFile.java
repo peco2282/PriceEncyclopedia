@@ -31,22 +31,80 @@ import com.google.gson.stream.JsonReader;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
-public class ConfigFile {
+public class PriceConfigFile {
 	private static final Type MAP_TYPE = new TypeToken<ArrayList<Map<String, Object>>>() {
 	}.getType();
-
+	private static final String DIR_PATH = "config/" + PriceEncyclopedia.MODID;
 	private final File confFile;
-	public JsonReader jsonReader = null;
+	private JsonReader jsonReader = null;
 	//  private Map<String, ArrayList<Map<String, PriceAbstract>>> items;
-	private ArrayList<PriceComponent> abstracts;
+	private List<? extends PriceComponent> abstracts;
 	private boolean loaded;
 	private String reason = null;
 
-	public ConfigFile(File confFile) {
+	public PriceConfigFile(File confFile) {
+		this.loaded = false;
 		this.confFile = confFile;
+
+		ArrayList<Map<String, String>> map = setupJsonReader(confFile);
+
+		try {
+			this.abstracts = parsePriceJson(map);
+		} catch (Exception exception) {
+			System.err.println("Error when upgrading config file " + confFile.getAbsolutePath() + " - hope for the best");
+			System.err.println("If you experience crashes, delete the file!");
+			loaded = false;
+			reason = "Error when upgrading config file. If you experience crashes, delete the file!";
+		}
+	}
+
+	public static File getOldFile() {
+		return new File(new File("config"), PriceEncyclopedia.MODID + ".json");
+	}
+
+	public static File getFile() {
+		PriceEncyclopedia.getLOGGER().warn("getFile() start.");
+		File dir = new File(DIR_PATH);
+		if (!(dir.exists())) {
+			boolean mkdir = dir.mkdir();
+			PriceEncyclopedia.getLOGGER().warn("mkdir succeed");
+		}
+		if (!(dir.isDirectory())) {
+			PriceEncyclopedia.getLOGGER().warn("Can't make directory " + dir.getAbsolutePath() + ", config subsystem will not work");
+		}
+		PriceEncyclopedia.getLOGGER().warn("return new config" + PriceEncyclopedia.MODID);
+		return new File(dir, PriceEncyclopedia.MODID + ".json");
+	}
+
+	private static ArrayList<? extends PriceComponent> parsePriceJson(
+		ArrayList<Map<String, String>> stringArray
+	) {
+		ArrayList<PriceComponent> map = new ArrayList<>();
+		int i = 0;
+		try {
+			for (Map<String, String> entry : stringArray) {
+				try {
+					map.add(
+						PriceComponent.parsePriceAbstract(entry)
+					);
+				} catch (Exception exception) {
+					PriceEncyclopedia.getLOGGER().warn("parse failed at " + i + "times.");
+				} finally {
+					i++;
+				}
+			}
+		} catch (Exception exception) {
+			System.err.println("Parse failed at " + i + " times loop.");
+			exception.printStackTrace(System.err);
+		}
+		return map;
+	}
+
+	private ArrayList<Map<String, String>> setupJsonReader(File file) {
 		ArrayList<Map<String, String>> map = new ArrayList<>();
 		try (JsonReader reader = new JsonReader(new FileReader(confFile))) {
 			Gson gson = new Gson();
@@ -67,52 +125,6 @@ public class ConfigFile {
 			exception.printStackTrace(System.err);
 			loaded = false;
 			reason = "Trying to load config file. but failed with IOException.";
-		}
-
-		try {
-			this.abstracts = parsePriceJson(map);
-		} catch (Exception exception) {
-			System.err.println("Error when upgrading config file " + confFile.getAbsolutePath() + " - hope for the best");
-			System.err.println("If you experience crashes, delete the file!");
-			loaded = false;
-			reason = "Error when upgrading config file. If you experience crashes, delete the file!";
-		}
-	}
-
-	public static File getFile() {
-		PriceEncyclopedia.getLOGGER().warn("getFile() start.");
-		File dir = new File("config");
-		if (!(dir.exists())) {
-			boolean mkdir = dir.mkdir();
-			PriceEncyclopedia.getLOGGER().warn("mkdir succeed");
-		}
-		if (!(dir.isDirectory())) {
-			PriceEncyclopedia.getLOGGER().warn("Can't make directory " + dir.getAbsolutePath() + ", config subsystem will not work");
-		}
-		PriceEncyclopedia.getLOGGER().warn("return new config" + PriceEncyclopedia.MODID);
-		return new File(dir, PriceEncyclopedia.MODID + ".json");
-	}
-
-	private static ArrayList<PriceComponent> parsePriceJson(
-		ArrayList<Map<String, String>> stringArray
-	) {
-		ArrayList<PriceComponent> map = new ArrayList<>();
-		int i = 0;
-		try {
-			for (Map<String, String> entry : stringArray) {
-				try {
-					map.add(
-						PriceComponent.parsePriceAbstract(entry)
-					);
-				} catch (Exception exception) {
-					PriceEncyclopedia.getLOGGER().warn("parse failed at " + i + "times.");
-				} finally {
-					i++;
-				}
-			}
-		} catch (Exception exception) {
-			System.err.println("Parse failed at " + i + " times loop.");
-			exception.printStackTrace(System.err);
 		}
 		return map;
 	}
@@ -149,7 +161,28 @@ public class ConfigFile {
 		return arrayList;
 	}
 
-	public ArrayList<? extends PriceComponent> getAbstracts() {
+	public List<? extends PriceComponent> getAbstracts() {
 		return abstracts;
+	}
+
+	void setAbstracts(List<? extends PriceComponent> abstracts) {
+		this.abstracts = abstracts;
+	}
+
+	PriceConfigFile setAbstractWithWriting(List<? extends PriceComponent> abstracts) {
+		setAbstracts(abstracts);
+		write(confFile, abstracts);
+		return this;
+	}
+
+	void write(File file, List<? extends PriceComponent> abstracts) {
+		try (FileWriter writer = new FileWriter(file)) {
+			new GsonBuilder()
+				.setPrettyPrinting()
+				.create()
+				.toJson(abstracts, writer);
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
 	}
 }
