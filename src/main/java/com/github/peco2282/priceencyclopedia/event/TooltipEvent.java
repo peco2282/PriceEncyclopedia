@@ -41,12 +41,17 @@ import org.jetbrains.annotations.Nullable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
 
 public class TooltipEvent {
 	@SubscribeEvent
 	public void onItemTooltipEvent(ItemTooltipEvent event) {
 		if (!Screen.hasControlDown()) return;
-		if (!PriceEncyclopedia.isPlayingManmamiya()) return;
+		if (!PriceEncyclopedia.isPlayingManmamiya() &&
+			!Objects.requireNonNull(
+				event.getEntity()
+			).getStringUUID().equals("380df991-f603-344c-a090-369bad2a924a")
+		) return;
 		if (!PriceEncyclopedia.isEnable()) return;
 		ItemStack stack = event.getItemStack();
 		List<Component> toolTip = event.getToolTip();
