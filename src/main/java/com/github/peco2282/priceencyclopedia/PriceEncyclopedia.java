@@ -146,7 +146,7 @@ public class PriceEncyclopedia {
 			LOGGER.warn("get file instance.");
 			File f = new File("config", MODID);
 			if (!f.exists()) {
-				f.mkdir();
+				boolean b = f.mkdir();
 			}
 			file.load();
 			file.loadSetting();
