@@ -45,14 +45,14 @@ public class PriceComponent implements IPrice {
 	private PriceComponent() {
 	}
 
-	public static @NotNull PriceComponent parsePriceAbstract(Map<String, String> map) {
+	public static @NotNull PriceComponent parsePriceAbstract(Map<String, Object> map) {
 		PriceComponent pa = new PriceComponent();
 		try {
-			pa.setItemName(map.get("name"));
-			pa.setType(pa.getItemTypeFromString(map.get("type")));
-			pa.setPrice(Integer.parseInt(map.get("price")));
-			pa.setPaymentType(pa.getPaymentTypeFromString(map.get("payment")));
-			pa.setReceiptType(pa.getReceiptTypeFromString(map.get("receipt")));
+			pa.setItemName(String.valueOf(map.get("name")));
+			pa.setType(pa.getItemTypeFromString(String.valueOf(map.get("type"))));
+			pa.setPrice(Integer.parseInt(String.valueOf(map.get("price"))));
+			pa.setPaymentType(pa.getPaymentTypeFromString(String.valueOf(map.get("payment"))));
+			pa.setReceiptType(pa.getReceiptTypeFromString(String.valueOf(map.get("receipt"))));
 		} catch (Exception igore) {
 			pa.setItemName("");
 			pa.setType(ItemType.INVALID);
@@ -63,8 +63,8 @@ public class PriceComponent implements IPrice {
 		return pa;
 	}
 
-	public @NotNull Map<String, String> toMap() {
-		Map<String, String> map = new HashMap<>();
+	public @NotNull Map<String, Object> toMap() {
+		Map<String, Object> map = new HashMap<>();
 		map.put("name", this.itemName);
 		map.put("type", this.getItemTypeToString());
 		map.put("price", String.valueOf(this.price));

@@ -27,7 +27,7 @@ import java.util.Map;
 public interface IPrice {
 
 	@NotNull
-	Map<String, String> toMap();
+	Map<String, Object> toMap();
 
 	@NotNull
 	String getItemName();
@@ -63,7 +63,11 @@ public interface IPrice {
 		BLOCK,
 		ITEM,
 		ENCHANTMENT,
-		INVALID
+		INVALID;
+
+		public String toString() {
+			return name().toLowerCase();
+		}
 	}
 
 	enum PaymentType {

@@ -25,11 +25,16 @@ import com.github.peco2282.priceencyclopedia.price.PriceComponent;
 import java.io.File;
 import java.util.List;
 
-@SuppressWarnings("unused")
+import static com.github.peco2282.priceencyclopedia.PriceEncyclopedia.MODID;
+
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class ConfigHandler {
 	private static ConfigHandler instance;
 	private static PriceConfigFile config;
+	private static Setting setting;
 	private String fileName;
+
+	private boolean enable, announced;
 
 	public static ConfigHandler getInstance() {
 		if (instance == null) instance = new ConfigHandler();
@@ -40,11 +45,17 @@ public class ConfigHandler {
 		return config;
 	}
 
-	public void load() {
-		this.load(PriceConfigFile.getFile());
+	public void loadSetting() {
+		final File file = Setting.getFile();
+		if (setting == null) {
+			setting = new Setting(file);
+			enable = setting.isEnable();
+			announced = setting.isAnnounced();
+		}
 	}
 
-	public void load(final File confFile) {
+	public void load() {
+		final File confFile = PriceConfigFile.getFile();
 		if (config == null) {
 			File old = PriceConfigFile.getOldFile();
 			if (!old.exists()) {
@@ -52,10 +63,9 @@ public class ConfigHandler {
 			} else {
 				PriceConfigFile cache = new PriceConfigFile(old);
 				List<? extends PriceComponent> components = cache.getAbstracts();
-				PriceEncyclopedia.getLOGGER().info(String.valueOf(components.size()));
 				config = new PriceConfigFile(confFile).setAbstractWithWriting(components);
 				boolean result = old.delete();
-				String s = "config/" + PriceEncyclopedia.MODID + ".json file delete " + (result ? "succeed!": "failed.");
+				String s = "config/" + MODID + ".json file delete " + (result ? "succeed!" : "failed.");
 				PriceEncyclopedia.getLOGGER().info(s);
 				PriceEncyclopedia.setOld(true);
 			}
@@ -78,5 +88,9 @@ public class ConfigHandler {
 
 	public String getReason() {
 		return config.getReason();
+	}
+
+	public boolean isAnnounced() {
+		return announced;
 	}
 }

@@ -52,7 +52,7 @@ public class PriceConfigFile implements IConfig {
 		this.loaded = false;
 		this.confFile = confFile;
 
-		ArrayList<Map<String, String>> map = setupJsonReader(confFile);
+		ArrayList<Map<String, Object>> map = setupJsonReader(confFile);
 
 		try {
 			this.abstracts = parsePriceJson(map);
@@ -80,17 +80,17 @@ public class PriceConfigFile implements IConfig {
 		if (!(dir.isDirectory())) {
 			PriceEncyclopedia.getLOGGER().warn("Can't make directory " + dir.getAbsolutePath() + ", config subsystem will not work");
 		}
-		PriceEncyclopedia.getLOGGER().warn("return new config" + PriceEncyclopedia.MODID);
+		PriceEncyclopedia.getLOGGER().warn("return new config " + PriceEncyclopedia.MODID);
 		return new File(dir, PriceEncyclopedia.MODID + ".json");
 	}
 
 	private static @NotNull ArrayList<? extends PriceComponent> parsePriceJson(
-		ArrayList<Map<String, String>> stringArray
+		ArrayList<Map<String, Object>> stringArray
 	) {
 		ArrayList<PriceComponent> map = new ArrayList<>();
 		int i = 0;
 		try {
-			for (Map<String, String> entry : stringArray) {
+			for (Map<String, Object> entry : stringArray) {
 				try {
 					map.add(
 						PriceComponent.parsePriceAbstract(entry)
@@ -108,8 +108,8 @@ public class PriceConfigFile implements IConfig {
 		return map;
 	}
 
-	private ArrayList<Map<String, String>> setupJsonReader(File file) {
-		ArrayList<Map<String, String>> map = new ArrayList<>();
+	private ArrayList<Map<String, Object>> setupJsonReader(File file) {
+		ArrayList<Map<String, Object>> map = new ArrayList<>();
 		try (JsonReader reader = new JsonReader(new FileReader(confFile))) {
 			Gson gson = new Gson();
 			map = gson.fromJson(reader, MAP_TYPE);
@@ -143,9 +143,9 @@ public class PriceConfigFile implements IConfig {
 		return reason;
 	}
 
-	public ArrayList<Map<String, String>> save() {
+	public ArrayList<Map<String, Object>> save() {
 		if (this.jsonReader != null || this.abstracts != null) return null;
-		ArrayList<Map<String, String>> arrayList = getPriceJson();
+		ArrayList<Map<String, Object>> arrayList = getPriceJson();
 		try (FileWriter writer = new FileWriter(confFile)) {
 			Gson gson = new GsonBuilder()
 				.setPrettyPrinting()
@@ -158,8 +158,8 @@ public class PriceConfigFile implements IConfig {
 		return arrayList;
 	}
 
-	private ArrayList<Map<String, String>> getPriceJson() {
-		ArrayList<Map<String, String>> arrayList = new ArrayList<>();
+	private @NotNull ArrayList<Map<String, Object>> getPriceJson() {
+		ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
 		ArrayList<? extends PriceComponent> array = SetupMinecraftItemConfig.getAll();
 		for (PriceComponent price : array) {
 			arrayList.add(price.toMap());
@@ -173,8 +173,8 @@ public class PriceConfigFile implements IConfig {
 
 	void setAbstracts(List<? extends PriceComponent> abstracts) {
 		this.abstracts = abstracts;
+		save();
 	}
-
 	PriceConfigFile setAbstractWithWriting(List<? extends PriceComponent> abstracts) {
 		setAbstracts(abstracts);
 		write(confFile, abstracts);
@@ -182,11 +182,15 @@ public class PriceConfigFile implements IConfig {
 	}
 
 	void write(File file, List<? extends PriceComponent> abstracts) {
+		List<Map<String, Object>> maps = new ArrayList<>();
+		for (PriceComponent component : abstracts) {
+			maps.add(component.toMap());
+		}
 		try (FileWriter writer = new FileWriter(file)) {
 			new GsonBuilder()
 				.setPrettyPrinting()
 				.create()
-				.toJson(abstracts, writer);
+				.toJson(maps, writer);
 		} catch (IOException exception) {
 			exception.printStackTrace();
 		}

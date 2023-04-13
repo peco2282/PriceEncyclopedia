@@ -20,6 +20,7 @@
 package com.github.peco2282.priceencyclopedia;
 
 import com.github.peco2282.priceencyclopedia.config.ConfigHandler;
+import com.github.peco2282.priceencyclopedia.config.Setting;
 import com.github.peco2282.priceencyclopedia.key.KeyHandler;
 import com.github.peco2282.priceencyclopedia.key.KeyInputEvent;
 import com.github.peco2282.priceencyclopedia.utils.ChatFormat;
@@ -44,6 +45,8 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
+
+import java.io.File;
 
 import static com.github.peco2282.priceencyclopedia.utils.ChatFormat.*;
 
@@ -113,6 +116,7 @@ public class PriceEncyclopedia {
 
 	public static void changeState() {
 		isEnable = !isEnable;
+		LOGGER.info(String.valueOf(isEnable));
 	}
 
 	public static void setState(boolean state) {
@@ -139,6 +143,10 @@ public class PriceEncyclopedia {
 		if (FMLEnvironment.dist.isClient()) {
 			file = ConfigHandler.getInstance();
 			LOGGER.warn("get file instance.");
+			File f = new File("config", MODID);
+			if (!f.exists()) {
+				f.mkdir();
+			}
 			file.load();
 			file.loadSetting();
 
@@ -162,6 +170,11 @@ public class PriceEncyclopedia {
 	public void onServerStarting(ServerStartingEvent event) {
 		// Do something when the server starts
 		LOGGER.info("HELLO from server starting");
+	}
+
+	@SubscribeEvent
+	public void onPlayerLoggedout(PlayerEvent.PlayerLoggedOutEvent event) {
+		Setting.saveState(isEnable);
 	}
 
 	@SubscribeEvent
