@@ -17,8 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.github.peco2282.priceencyclopedia;
+package com.github.peco2282.priceencyclopedia.event;
 
+import com.github.peco2282.priceencyclopedia.PriceEncyclopedia;
 import com.github.peco2282.priceencyclopedia.config.ConfigHandler;
 import com.github.peco2282.priceencyclopedia.price.IPrice.ItemType;
 import com.github.peco2282.priceencyclopedia.price.IPrice.PaymentType;

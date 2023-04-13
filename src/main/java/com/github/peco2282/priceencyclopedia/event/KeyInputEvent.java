@@ -17,9 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package com.github.peco2282.priceencyclopedia.key;
+package com.github.peco2282.priceencyclopedia.event;
 
 import com.github.peco2282.priceencyclopedia.PriceEncyclopedia;
+import com.github.peco2282.priceencyclopedia.key.KeyHandler;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;

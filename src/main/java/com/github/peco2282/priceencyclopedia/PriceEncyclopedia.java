@@ -21,8 +21,9 @@ package com.github.peco2282.priceencyclopedia;
 
 import com.github.peco2282.priceencyclopedia.config.ConfigHandler;
 import com.github.peco2282.priceencyclopedia.config.Setting;
+import com.github.peco2282.priceencyclopedia.event.KeyInputEvent;
+import com.github.peco2282.priceencyclopedia.event.TooltipEvent;
 import com.github.peco2282.priceencyclopedia.key.KeyHandler;
-import com.github.peco2282.priceencyclopedia.key.KeyInputEvent;
 import com.github.peco2282.priceencyclopedia.utils.ChatFormat;
 import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
