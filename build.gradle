@@ -8,7 +8,7 @@ plugins {
 
 
 group = 'com.github.peco2282'
-version = '1.3.0-SNAPSHOT'
+version = '1.3.0'
 
 java {
   archivesBaseName = 'PriceEncyclopedia'
