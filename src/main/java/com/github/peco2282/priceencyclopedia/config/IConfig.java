@@ -23,10 +23,11 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public interface IConfig {
-	String getReason();
+	List<String> getReason();
 	boolean isLoaded();
 
 	@Contract(" -> new")

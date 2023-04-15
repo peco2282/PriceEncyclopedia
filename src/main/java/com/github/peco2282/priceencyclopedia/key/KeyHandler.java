@@ -19,15 +19,21 @@
 
 package com.github.peco2282.priceencyclopedia.key;
 
+import com.github.peco2282.priceencyclopedia.PriceEncyclopedia;
+import com.github.peco2282.priceencyclopedia.event.KeyInputEvent;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-@SuppressWarnings("NoTranslation")
+//@SuppressWarnings("NoTranslation")
 @EventBusSubscriber(Dist.CLIENT)
 public class KeyHandler {
 	private static KeyMapping keyMapping;
@@ -38,7 +44,13 @@ public class KeyHandler {
 
 	@SubscribeEvent
 	public void onRegisterKeyMappingsEvent(@NotNull RegisterKeyMappingsEvent event) {
-		keyMapping = new KeyMapping("key.priceencyclopedia.change", GLFW.GLFW_KEY_O, "key.categories.misc");
+		keyMapping = new KeyMapping(
+			"key.priceencyclopedia.keycode",
+			KeyConflictContext.IN_GAME,
+			InputConstants.Type.KEYSYM,
+			GLFW.GLFW_KEY_O,
+			"key.categories.priceencyclopedia"
+		);
 		event.register(keyMapping);
 	}
 }

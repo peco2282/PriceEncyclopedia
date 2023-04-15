@@ -46,7 +46,7 @@ public class PriceConfigFile implements IConfig {
 	//  private Map<String, ArrayList<Map<String, PriceAbstract>>> items;
 	private List<? extends PriceComponent> abstracts;
 	private boolean loaded;
-	private String reason = null;
+	private final List<String> reason = new ArrayList<>();
 
 	public PriceConfigFile(File confFile) {
 		this.loaded = false;
@@ -60,7 +60,7 @@ public class PriceConfigFile implements IConfig {
 			System.err.println("Error when upgrading config file " + confFile.getAbsolutePath() + " - hope for the best");
 			System.err.println("If you experience crashes, delete the file!");
 			loaded = false;
-			reason = "Error when upgrading config file. If you experience crashes, delete the file!";
+			reason.add("Error when upgrading config file. If you experience crashes, delete the file!");
 		}
 	}
 
@@ -123,12 +123,12 @@ public class PriceConfigFile implements IConfig {
 			System.err.println("Syntax error in config file " + confFile.getAbsolutePath() + " - using defaults");
 			exception.printStackTrace(System.err);
 			loaded = false;
-			reason = "Syntax error in config file with JsonParseException";
+			reason.add("Syntax error in config file with JsonParseException");
 		} catch (IOException exception) {
 			System.err.println("Trying to load config file " + confFile.getAbsolutePath() + ":");
 			exception.printStackTrace(System.err);
 			loaded = false;
-			reason = "Trying to load config file. but failed with IOException.";
+			reason.add("Trying to load config file. but failed with IOException.");
 		}
 		return map;
 	}
@@ -139,7 +139,7 @@ public class PriceConfigFile implements IConfig {
 	}
 
 	@Override
-	public String getReason() {
+	public List<String> getReason() {
 		return reason;
 	}
 

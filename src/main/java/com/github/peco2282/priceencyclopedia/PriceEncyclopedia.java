@@ -29,6 +29,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
@@ -48,6 +49,7 @@ import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.util.List;
 
 import static com.github.peco2282.priceencyclopedia.utils.ChatFormat.*;
 
@@ -134,9 +136,28 @@ public class PriceEncyclopedia {
 		}
 	}
 
+	public static void announceChat(List<String> messages, Player player, ChatFormatting... component) {
+		if (player != null) {
+			for (String message : messages) {
+				announceChat(ChatFormat.withColor(message, component), player);
+			}
+		}
+	}
+
 	public static void announceChat(MutableComponent component, Player player) {
 		if (player != null) {
 			player.displayClientMessage(component, false);
+		}
+	}
+
+	public static void announceScreen(String message, Player player, ChatFormatting... formattings) {
+		announceScreen(Component.literal(message), player, formattings);
+	}
+
+	private static void announceScreen(MutableComponent component, Player player, ChatFormatting... formattings) {
+		if (player != null) {
+			component.withStyle(formattings);
+			player.displayClientMessage(component, true);
 		}
 	}
 
@@ -180,12 +201,11 @@ public class PriceEncyclopedia {
 
 	@SubscribeEvent
 	public void onPlayerLoggined(PlayerEvent.PlayerLoggedInEvent event) {
-		LOGGER.info(String.valueOf(isOld));
 		if (isOld) {
 			announceChat(
 				buildComponent(
 					toComponent(MODNAME + " mod is starting with 1.3.0, config files are "),
-					withColor("managed in directories.", ChatFormatting.BLUE, ChatFormatting.BOLD)
+					withColor("managed in directories.", ChatFormatting.GREEN, ChatFormatting.BOLD)
 				),
 				event.getEntity()
 			);

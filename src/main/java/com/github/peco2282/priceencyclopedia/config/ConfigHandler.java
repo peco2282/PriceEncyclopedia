@@ -23,6 +23,7 @@ import com.github.peco2282.priceencyclopedia.PriceEncyclopedia;
 import com.github.peco2282.priceencyclopedia.price.PriceComponent;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.peco2282.priceencyclopedia.PriceEncyclopedia.MODID;
@@ -86,8 +87,13 @@ public class ConfigHandler {
 		return config.isLoaded();
 	}
 
-	public String getReason() {
-		return config.getReason();
+	public List<String> getReason() {
+		List<String> configReason = config.getReason();
+		List<String> settingReason = setting.getReason();
+		List<String> reasons = new ArrayList<>();
+		if (configReason.size() >= 1) reasons.addAll(configReason);
+		if (settingReason.size() >= 1) reasons.addAll(settingReason);
+		return reasons;
 	}
 
 	public boolean isAnnounced() {

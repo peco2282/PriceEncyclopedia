@@ -31,23 +31,25 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class Setting implements IConfig {
+	private static final String DIR_PATH = "config/" + PriceEncyclopedia.MODID;
 	private static File setting;
 	private static boolean announced = true;
 	private static boolean enable;
+	private static Map<String, Object> map;
 	private final Type MAP_TYPE = new TypeToken<Map<String, Object>>() {
 	}.getType();
-	private String reason;
+	private final List<String> reason;
 	private boolean loaded;
-	private Map<String, Object> map;
-	private static final String DIR_PATH = "config/" + PriceEncyclopedia.MODID;
 
 	public Setting(File _setting) {
-		this.reason = null;
+		this.reason = new ArrayList<>();
 		this.loaded = false;
 		setting = _setting;
 		try (JsonReader reader = new JsonReader(new FileReader(_setting))) {
@@ -60,15 +62,15 @@ public class Setting implements IConfig {
 			this.loaded = true;
 
 		} catch (JsonIOException e) {
-			this.reason = "JsonIOException";
+			this.reason.add("JsonIOException");
 			this.loaded = false;
 
 		} catch (JsonSyntaxException e) {
-			this.reason = "JsonSyntaxException";
+			this.reason.add("JsonSyntaxException");
 			this.loaded = false;
 
 		} catch (IOException e) {
-			this.reason = "Cannot load with IOExeption";
+			this.reason.add("Cannot load with IOExeption");
 			this.loaded = false;
 		}
 	}
@@ -78,11 +80,13 @@ public class Setting implements IConfig {
 	}
 
 	public static void saveState(boolean state) {
-		Map<String, Object> _map = new HashMap<>();
-		_map.put("enable", state);
-		if (!announced) _map.put("announced", false);
-		if (setting != null) save(setting, _map);
-		else save(new File(DIR_PATH, "setting.json"), _map);
+		map.put("enable", state);
+		save(
+			setting != null
+				? setting
+				: new File(DIR_PATH, "setting.json"),
+			map
+		);
 	}
 
 	@Contract("_, _ -> param2")
@@ -100,17 +104,19 @@ public class Setting implements IConfig {
 
 	private void parseMapObject(@NotNull Map<String, Object> map) {
 		announced = !map.containsKey("announced") || (boolean) map.get("announced");
-		enable = (boolean) map.get("enable");
+		enable = !map.containsKey("enable") || (boolean) map.get("enable");
+		PriceEncyclopedia.setState(enable);
 	}
 
 	Map<String, Object> save(File file) {
-		Map<String, Object> _map = new HashMap<>();
-		_map.put("enable", true);
-		return save(file, _map);
+		if (map == null) map = new HashMap<>();
+		PriceEncyclopedia.setState(true);
+		map.put("enable", true);
+		return save(file, map);
 	}
 
 	@Override
-	public String getReason() {
+	public List<String> getReason() {
 		return reason;
 	}
 
