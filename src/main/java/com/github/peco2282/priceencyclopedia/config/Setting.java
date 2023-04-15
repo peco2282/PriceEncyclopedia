@@ -53,12 +53,12 @@ public class Setting implements IConfig {
 		this.loaded = false;
 		setting = _setting;
 		try (JsonReader reader = new JsonReader(new FileReader(_setting))) {
-			this.map = new Gson().fromJson(reader, MAP_TYPE);
+			map = new Gson().fromJson(reader, MAP_TYPE);
 			parseMapObject(map);
 			this.loaded = true;
 
 		} catch (FileNotFoundException e) {
-			this.map = this.save(setting);
+			map = this.save(setting);
 			this.loaded = true;
 
 		} catch (JsonIOException e) {
