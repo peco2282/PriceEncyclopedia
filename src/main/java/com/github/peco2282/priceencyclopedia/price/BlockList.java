@@ -19,12 +19,12 @@
 
 package com.github.peco2282.priceencyclopedia.price;
 
-import static com.github.peco2282.priceencyclopedia.price.IPrice.PaymentType.*;
-import static com.github.peco2282.priceencyclopedia.price.IPrice.ReceiptType.ONE;
-import static com.github.peco2282.priceencyclopedia.price.IPrice.ReceiptType.ST;
+
+import static com.github.peco2282.priceencyclopedia.price.PriceComponent.PaymentType.*;
+import static com.github.peco2282.priceencyclopedia.price.PriceComponent.ReceiptType.*;
 
 public class BlockList {
-	static final PriceBlock[] blocks = new PriceBlock[]{
+	private static final PriceBlock[] blocks = new PriceBlock[]{
 		// 石・砂・鉱石
 		new PriceBlock("stone", 32, D),
 		new PriceBlock("cobblestone", 32, D),
@@ -198,4 +198,8 @@ public class BlockList {
 		new PriceBlock("melon", 3, D, ST),
 		new PriceBlock("sugar_cane", 5, D, ST)
 	};
+
+	public static PriceBlock[] getBlocks() {
+		return blocks;
+	}
 }

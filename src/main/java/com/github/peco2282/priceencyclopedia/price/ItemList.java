@@ -19,11 +19,12 @@
 
 package com.github.peco2282.priceencyclopedia.price;
 
-import static com.github.peco2282.priceencyclopedia.price.IPrice.PaymentType.*;
-import static com.github.peco2282.priceencyclopedia.price.IPrice.ReceiptType.*;
+
+import static com.github.peco2282.priceencyclopedia.price.PriceComponent.PaymentType.*;
+import static com.github.peco2282.priceencyclopedia.price.PriceComponent.ReceiptType.*;
 
 public class ItemList {
-	static final PriceItem[] items = new PriceItem[]{
+	private static final PriceItem[] items = new PriceItem[]{
 		new PriceItem("cocoa_beans", 1, D, ST),
 		new PriceItem("beetroot_seeds", 1, D, ST),
 		new PriceItem("spore_blossom", 4, STD, ST),
@@ -110,4 +111,8 @@ public class ItemList {
 		new PriceItem("golden_carrot", 6, D, ST),
 		new PriceItem("enchanted_golden_apple", 1, STDB, ONE)
 	};
+
+	public static PriceItem[] getItems() {
+		return items;
+	}
 }
