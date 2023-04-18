@@ -27,6 +27,8 @@ import java.util.Arrays;
 public class SetupMinecraftItemConfig {
 	static ArrayList<PriceComponent> abstracts = new ArrayList<>();
 
+	static ArrayList<PriceStackable> stackables = new ArrayList<>();
+
 	static ArrayList<PriceItem> items = new ArrayList<>();
 
 	static ArrayList<PriceBlock> blocks = new ArrayList<>();
@@ -34,36 +36,46 @@ public class SetupMinecraftItemConfig {
 	static ArrayList<PriceEnchanted> enchanteds = new ArrayList<>();
 
 	private static void setItems() {
-		items.addAll(Arrays.asList(ItemList.items));
+		items.addAll(Arrays.asList(ItemList.getItems()));
 		abstracts.addAll(items);
 	}
 
 	private static void setBlocks() {
-		blocks.addAll(Arrays.asList(BlockList.blocks));
+		blocks.addAll(Arrays.asList(BlockList.getBlocks()));
 		abstracts.addAll(blocks);
 	}
 
 	private static void setEnchanteds() {
-		enchanteds.addAll(Arrays.asList(EnchantedList.enchanteds));
+		enchanteds.addAll(Arrays.asList(EnchantedList.getEnchanteds()));
 		abstracts.addAll(enchanteds);
+	}
+
+	private static void setStackables() {
+		stackables.addAll(Arrays.asList(BlockList.getBlocks()));
+		stackables.addAll(Arrays.asList(ItemList.getItems()));
 	}
 
 	public static ArrayList<? extends PriceComponent> getAll() {
 		setBlocks();
 		setItems();
 		setEnchanteds();
+		setStackables();
 		return abstracts;
 	}
 
-	public ArrayList<PriceItem> getItems() {
+	public static ArrayList<PriceItem> getItems() {
 		return items;
+	}
+
+	public static ArrayList<PriceStackable> getStackables() {
+		return stackables;
 	}
 
 	public ArrayList<PriceBlock> getBlocks() {
 		return blocks;
 	}
 
-	public ArrayList<PriceEnchanted> getEnchanteds() {
+	public static ArrayList<PriceEnchanted> getEnchanteds() {
 		return enchanteds;
 	}
 }
