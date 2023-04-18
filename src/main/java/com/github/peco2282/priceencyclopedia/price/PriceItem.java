@@ -19,8 +19,22 @@
 
 package com.github.peco2282.priceencyclopedia.price;
 
-public class PriceItem extends PriceComponent {
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+
+public class PriceItem extends PriceStackable {
 	PriceItem(String itemName, int price, PaymentType paymentType, ReceiptType receiptType) {
 		super(itemName, ItemType.ITEM, price, paymentType, receiptType);
+	}
+
+
+	public PriceItem() {
+		super();
+	}
+
+	@Override
+	public @NotNull PriceItem parsePriceMap(@NotNull Map<String, Object> map) {
+		return (PriceItem) super.parsePriceMap(map);
 	}
 }

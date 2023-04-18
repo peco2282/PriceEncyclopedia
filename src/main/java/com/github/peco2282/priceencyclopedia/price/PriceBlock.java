@@ -19,12 +19,26 @@
 
 package com.github.peco2282.priceencyclopedia.price;
 
-public class PriceBlock extends PriceComponent {
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+
+public class PriceBlock extends PriceStackable {
 	PriceBlock(String itemName, int price, PaymentType paymentType, ReceiptType receiptType) {
 		super(itemName, ItemType.BLOCK, price, paymentType, receiptType);
 	}
 
 	PriceBlock(String itemName, int price, PaymentType paymentType) {
 		this(itemName, price, paymentType, ReceiptType.LC);
+	}
+
+
+	public PriceBlock() {
+		super();
+	}
+
+	@Override
+	public @NotNull PriceBlock parsePriceMap(@NotNull Map<String, Object> map) {
+		return (PriceBlock) super.parsePriceMap(map);
 	}
 }

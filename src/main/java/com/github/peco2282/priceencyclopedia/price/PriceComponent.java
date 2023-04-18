@@ -22,11 +22,10 @@ package com.github.peco2282.priceencyclopedia.price;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-public class PriceComponent implements IPrice {
+public abstract class PriceComponent {
 
 	private String itemName;
 	private ItemType type;
@@ -42,36 +41,12 @@ public class PriceComponent implements IPrice {
 		this.receiptType = receiptType;
 	}
 
-	private PriceComponent() {
+	PriceComponent() {
 	}
 
-	public static @NotNull PriceComponent parsePriceAbstract(Map<String, Object> map) {
-		PriceComponent pa = new PriceComponent();
-		try {
-			pa.setItemName(String.valueOf(map.get("name")));
-			pa.setType(pa.getItemTypeFromString(String.valueOf(map.get("type"))));
-			pa.setPrice(Integer.parseInt(String.valueOf(map.get("price"))));
-			pa.setPaymentType(pa.getPaymentTypeFromString(String.valueOf(map.get("payment"))));
-			pa.setReceiptType(pa.getReceiptTypeFromString(String.valueOf(map.get("receipt"))));
-		} catch (Exception igore) {
-			pa.setItemName("");
-			pa.setType(ItemType.INVALID);
-			pa.setPrice(0);
-			pa.setPaymentType(PaymentType.INVALID);
-			pa.setReceiptType(ReceiptType.INVALID);
-		}
-		return pa;
-	}
+	public abstract @NotNull PriceComponent parsePriceMap(@NotNull Map<String, Object> map);
 
-	public @NotNull Map<String, Object> toMap() {
-		Map<String, Object> map = new HashMap<>();
-		map.put("name", this.itemName);
-		map.put("type", this.getItemTypeToString());
-		map.put("price", String.valueOf(this.price));
-		map.put("payment", this.getPaymentTypeToString());
-		map.put("receipt", this.getReceiptTypeToString());
-		return map;
-	}
+	public abstract @NotNull Map<String, Object> toMap();
 
 	@NotNull
 	public String getItemName() {
@@ -79,16 +54,16 @@ public class PriceComponent implements IPrice {
 	}
 
 
-	public void setItemName(String itemName) {
+	public void setItemName(@NotNull String itemName) {
 		this.itemName = itemName;
 	}
 
 	@NotNull
-	public IPrice.ItemType getType() {
+	public ItemType getType() {
 		return type;
 	}
 
-	private void setType(ItemType type) {
+	public void setType(ItemType type) {
 		this.type = type;
 	}
 
@@ -105,7 +80,7 @@ public class PriceComponent implements IPrice {
 		return paymentType;
 	}
 
-	private void setPaymentType(PaymentType paymentType) {
+	void setPaymentType(PaymentType paymentType) {
 		this.paymentType = paymentType;
 	}
 
@@ -114,12 +89,12 @@ public class PriceComponent implements IPrice {
 		return receiptType;
 	}
 
-	private void setReceiptType(ReceiptType receiptType) {
+	void setReceiptType(ReceiptType receiptType) {
 		this.receiptType = receiptType;
 	}
 
 	@Nullable
-	public String getItemTypeToString() {
+	String getItemTypeToString() {
 		return switch (type) {
 			case BLOCK -> "block";
 			case ITEM -> "item";
@@ -128,7 +103,7 @@ public class PriceComponent implements IPrice {
 		};
 	}
 
-	public ItemType getItemTypeFromString(@NotNull String type) {
+	ItemType getItemTypeFromString(@NotNull String type) {
 		return switch (type) {
 			case "block" -> ItemType.BLOCK;
 			case "item" -> ItemType.ITEM;
@@ -177,5 +152,29 @@ public class PriceComponent implements IPrice {
 			case "lc" -> ReceiptType.LC;
 			default -> ReceiptType.INVALID;
 		};
+	}
+
+	public enum ItemType {
+		BLOCK,
+		ITEM,
+		ENCHANTMENT,
+		INVALID
+	}
+
+	public enum PaymentType {
+		G,
+		D,
+		DB,
+		STD,
+		STDB,
+		INVALID
+	}
+
+	public enum ReceiptType {
+		ONE,
+		ST,
+		C,
+		LC,
+		INVALID
 	}
 }
